@@ -2,21 +2,25 @@ import random
 from board import Board
 
 
-class RookVsBishopGame:
+class ChessMiniGame:
     """Simulates the Rook vs Bishop survival game."""
 
-    def __init__(self, bishop_pos='c3', rook_pos='h1', rounds=15):
+    def __init__(self, white_piece='bishop', black_piece='rook', white_pos='c3', black_pos='h1', rounds=15):
         """
         Initialize the game.
 
         Args:
-            bishop_pos (str): Starting position of bishop (default: 'c3')
-            rook_pos (str): Starting position of rook (default: 'h1')
+            white_piece (str): Piece name of white (default: 'bishop')
+            black_piece (str): Piece name of black (default: 'rook')
+            white_pos (str): Starting position of white (default: 'c3')
+            black_pos (str): Starting position of black (default: 'h1')
             rounds (int): Number of rounds to play (default: 15)
         """
         self.board = Board(
-            Board.parse_position(bishop_pos),
-            Board.parse_position(rook_pos)
+            white_piece = white_piece,
+            black_piece = black_piece,
+            white_pos = white_pos,
+            black_pos = black_pos
         )
         self.rounds = int(rounds)
         self.current_round = 0
@@ -51,35 +55,47 @@ class RookVsBishopGame:
         """
         self.current_round += 1
 
-        print(f"\n{'='*60}")
-        print(f"ROUND {self.current_round}")
-        print(f"{'='*60}")
+        round_msg = f"ROUND {self.current_round}"
+        print(f"\n{'=' * len(round_msg)}")
+        print(round_msg)
+        print(f"{'=' * len(round_msg)}")
 
-        # Step 1: Flip coin for direction
-        coin = self.flip_coin()
-        direction = 'up' if coin == 'heads' else 'right'
-        print(f"Coin toss: {coin.upper()} -> Moving {direction}")
+        # Step 1: Flip two coins for direction
+        # Check if the piece is valid for a linear combination of two directions using two coin tosses
+        coin1 = self.flip_coin()
+        coin2 = self.flip_coin()
+        direction1 = 'up' if coin1 == 'heads' else 'right'
+
+        lin_combo_pieces = ['king', 'queen', 'knight']
+        direction2 = None
+
+        if self.board.black_piece.name in lin_combo_pieces:
+            direction2 = 'straight' if coin2 == 'heads' else 'diagonal' # Uses a combination of two movement sets limited to the top right quadrant to decide movements for Queen, King, Knight
+            print(f"Coin toss 1: {coin1.upper()} Coin toss 2: {coin2.upper()} -> Moving {direction1} and to the {direction2}")
+        else:
+            print(f"Coin toss: {coin1.upper()} -> Moving {direction1}")
 
         # Step 2: Roll dice for distance
         die1, die2, total = self.roll_dice()
         print(f"Dice roll: {die1} + {die2} = {total} squares")
 
-        # Step 3: Move the rook
-        print(f"Rook position before move: {self.board.rook.position}")
-        new_position = self.board.move_rook(direction, total)
-        print(f"Rook position after move: {new_position}")
+        # Step 3: Move the black piece
+        print(f"Black position before move: {self.board.black_piece.position}")
+        new_position = self.board.move_black(direction1, direction2, total)
+        print(f"Black position after move: {new_position}")
     
         # Step 4: Display the board
         print(self.board.display_board())
 
         # Step 5: Check if rook was captured
-        if self.board.is_rook_captured():
-            print("\n" + "!"*60)
-            print("ROOK CAPTURED! Bishop can capture the rook at this position!")
-            print("!"*60)
+        if self.board.is_black_captured():
+            capture_msg = f"BLACK {self.board.black_piece.name.upper()} CAPTURED! White {self.board.white_piece.name.capitalize()} can capture the Black {self.board.black_piece.name.capitalize()} at this position!"
+            print("\n" + "!" * len(capture_msg))
+            print(capture_msg)
+            print("!" * len(capture_msg))
             return True
 
-        print("\n" + "Rook is safe this round.")
+        print(f"\nBlack {self.board.black_piece.name.capitalize()} is safe this round.")
         return False
 
     def play(self):
@@ -87,27 +103,30 @@ class RookVsBishopGame:
         Play the full game for the specified number of rounds.
 
         Returns:
-            str: 'bishop' if bishop wins, 'rook' if rook wins
+            str: 'white' if white wins, 'black' if black wins
         """
-        print("\n" + "*"*60)
-        print("ROOK VS BISHOP")
-        print("*"*60)
+        title_msg = f"{self.board.white_piece.name.upper()} VS {self.board.black_piece.name.upper()}"
+        print("\n" + "*" * len(title_msg))
+        print(title_msg)
+        print("*" * len(title_msg))
         print(f"\nStarting positions:")
-        print(f"  Bishop (White): {self.board.bishop.position} (stationary)")
-        print(f"  Rook (Black): {self.board.rook.position} (starting position)")
-        print(f"\nThe rook must survive {self.rounds} rounds to win!")
+        print(f"  {self.board.white_piece.name.capitalize()} (White): {self.board.white_piece.position} (stationary)")
+        print(f"  {self.board.black_piece.name.capitalize()} (Black): {self.board.black_piece.position} (starting position)")
+        print(f"\nThe {self.board.black_piece.name.capitalize()} must survive {self.rounds} rounds to win!")
 
         for _ in range(self.rounds):
             captured = self.play_round()
             if captured:
-                print("\n" + "="*60)
-                print("GAME OVER - BISHOP WINS!")
-                print("="*60)
-                print(f"The rook was captured in round {self.current_round}.")
-                return 'bishop'
+                win_msg = f"GAME OVER - WHITE {self.board.white_piece.name.upper()} WINS!"
+                print("\n" + "=" * len(win_msg))
+                print(win_msg)
+                print("=" * len(win_msg))
+                print(f"The Black {self.board.black_piece.name.capitalize()} was captured in round {self.current_round}.")
+                return 'white'
 
-        print("\n" + "="*60)
-        print("GAME OVER - ROOK WINS!")
-        print("="*60)
-        print(f"The rook survived all {self.rounds} rounds!")
-        return 'rook'
+        win_msg = f"GAME OVER - BLACK {self.board.black_piece.name.upper()} WINS!"
+        print("\n" + "=" * len(win_msg))
+        print(win_msg)
+        print("=" * len(win_msg))
+        print(f"The Black {self.board.black_piece.name.capitalize()} survived all {self.rounds} rounds!")
+        return 'black'

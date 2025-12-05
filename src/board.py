@@ -1,4 +1,4 @@
-from pieces import Position, Bishop, Rook
+from pieces import Position, Bishop, Rook, King, Queen, Knight, Pawn
 from rich import print
 class Board:
     """Represents a chess board with rook and bishop."""
@@ -6,66 +6,263 @@ class Board:
     FILES = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
     RANKS = [1, 2, 3, 4, 5, 6, 7, 8]
 
-    def __init__(self, bishop_position, rook_position):
+    def __init__(self, white_piece, black_piece, white_pos, black_pos):
         """
         Initialize the board with piece positions.
 
         Args:
-            bishop_position (Position): Starting position of the bishop
-            rook_position (Position): Starting position of the rook
+            white_position (Position): Starting position of white piece
+            black_position (Position): Starting position of the black piece
         """
-        self.bishop = Bishop(bishop_position)
-        self.rook = Rook(rook_position)
+        # Parse string positions to Position objects
+        white_position = self.parse_position(white_pos)
+        black_position = self.parse_position(black_pos)
 
-    def is_rook_captured(self):
+        # White piece instantiation
+        if white_piece == 'rook':
+            self.white_piece = Rook(white_position, 'white')
+        elif white_piece == 'bishop':
+            self.white_piece = Bishop(white_position, 'white')
+        elif white_piece == 'king':
+            self.white_piece = King(white_position, 'white')
+        elif white_piece == 'queen':
+            self.white_piece = Queen(white_position, 'white')
+        elif white_piece == 'knight':
+            self.white_piece = Knight(white_position, 'white')
+        elif white_piece == 'pawn':
+            self.white_piece = Pawn(white_position, 'white')
+
+        # Black piece instantiation
+        if black_piece == 'rook':
+            self.black_piece = Rook(black_position, 'black')
+        elif black_piece == 'bishop':
+            self.black_piece = Bishop(black_position, 'black')
+        elif black_piece == 'king':
+            self.black_piece = King(black_position, 'black')
+        elif black_piece == 'queen':
+            self.black_piece = Queen(black_position, 'black')
+        elif black_piece == 'knight':
+            self.black_piece = Knight(black_position, 'black')
+        elif black_piece == 'pawn':
+            self.black_piece = Pawn(black_position, 'black')
+
+
+    def is_black_captured(self):
         """
-        Check if the bishop can capture the rook.
+        Check if the white piece can capture the black piece.
 
         Returns:
-            bool: True if bishop can capture rook
+            bool: True if white can capture black
         """
-        return self.bishop.can_capture(self.rook.position)
+        return self.white_piece.can_capture(self.black_piece.position)
 
-    def is_bishop_captured(self):
+    def is_white_captured(self):
         """
-        Check if the rook can capture the bishop.
+        Check if the black piece can capture the white piece.
 
         Returns:
-            bool: True if rook can capture bishop
+            bool: True if black can capture white
         """
-        return self.rook.can_capture(self.bishop.position)
+        return self.black_piece.can_capture(self.white_piece.position)
 
-    def move_rook(self, direction, squares):
+    def move_black(self, direction1, direction2, squares):
         """
-        Move the rook in the specified direction by the given number of squares.
+        Move the black piece in the specified direction by the given number of squares.
         Handles wrapping around the board edges.
 
         Args:
-            direction (str): 'up' or 'right'
+            direction1 (str): 'up' or 'right'
+            direction2 (str): 'left' or 'right'
             squares (int): Number of squares to move
 
         Returns:
-            Position: New position of the rook
+            Position: New position of the black piece
         """
-        current_file = self.rook.position.file
-        current_rank = self.rook.position.rank
+        current_file = self.black_piece.position.file
+        current_rank = self.black_piece.position.rank
 
-        if direction == 'up':
-            # Move up (increase rank), wrap around if necessary
-            file_index = self.FILES.index(current_file)
-            new_rank_index = (self.RANKS.index(current_rank) + squares) % len(self.RANKS)
-            new_rank = self.RANKS[new_rank_index]
-            new_position = Position(current_file, new_rank)
-        elif direction == 'right':
-            # Move right (increase file), wrap around if necessary
-            file_index = self.FILES.index(current_file)
-            new_file_index = (file_index + squares) % len(self.FILES)
-            new_file = self.FILES[new_file_index]
-            new_position = Position(new_file, current_rank)
-        else:
-            raise ValueError(f"Invalid direction: {direction}")
+        file_index = self.FILES.index(current_file)
+        rank_index = self.RANKS.index(current_rank)
 
-        self.rook.move_to(new_position)
+        if self.black_piece.name == 'rook':
+            if direction1 == 'up':
+                # Move up (increase rank), wrap around if necessary                
+                new_rank_index = (rank_index + squares) % len(self.RANKS)
+                new_rank = self.RANKS[new_rank_index]
+                
+                new_position = Position(current_file, new_rank)
+            elif direction1 == 'right':
+                # Move right (increase file), wrap around if necessary
+                new_file_index = (file_index + squares) % len(self.FILES)
+                new_file = self.FILES[new_file_index]
+                
+                new_position = Position(new_file, current_rank)
+            else:
+                raise ValueError(f"Invalid direction: {direction1}")
+
+        elif self.black_piece.name == 'bishop':
+            if direction1 == 'up': # Diagonally up is up and to the right
+                # Move up diagonally (increase rank and decrease file), wrap around if necessary
+                new_rank_index = (rank_index + squares) % len(self.RANKS)
+                new_file_index = (file_index + squares) % len(self.FILES)
+                
+                new_rank = self.RANKS[new_rank_index]
+                new_file = self.FILES[new_file_index]
+                
+                new_position = Position(new_file, new_rank)
+            elif direction1 == 'right': # Diagonally right is down and to the right
+                # Move right diagonally (increase file and increase rank), wrap around if necessary
+                new_rank_index = (rank_index - squares) % len(self.RANKS)
+                new_file_index = (file_index + squares) % len(self.FILES)
+                
+                new_rank = self.RANKS[new_rank_index]
+                new_file = self.FILES[new_file_index]
+                
+                new_position = Position(new_file, new_rank)
+            else:
+                raise ValueError(f"Invalid direction: {direction1}")
+
+        elif self.black_piece.name == 'king':
+            squares = 1 if squares >= 1 else 0 # King can only move 1 square
+            if direction2 == 'straight':
+                if direction1 == 'up':
+                    # Move up (increase rank), wrap around if necessary
+                    new_rank_index = (rank_index + squares) % len(self.RANKS)
+                    new_rank = self.RANKS[new_rank_index]
+
+                    new_position = Position(current_file, new_rank)
+                elif direction1 == 'right':
+                    # Move right (increase file), wrap around if necessary
+                    new_file_index = (file_index + squares) % len(self.FILES)
+                    new_file = self.FILES[new_file_index]
+
+                    new_position = Position(new_file, current_rank)
+                else:
+                    raise ValueError(f"Invalid direction: {direction1}")
+            elif direction2 == 'diagonal':
+                # Move right diagonally (increase file and increase rank), wrap around if necessary
+                if direction1 == 'up': # Diagonally up is up and to the right
+                    # Move up diagonally (increase rank and decrease file), wrap around if necessary
+                    new_rank_index = (rank_index + squares) % len(self.RANKS)
+                    new_file_index = (file_index + squares) % len(self.FILES)
+                    
+                    new_rank = self.RANKS[new_rank_index]
+                    new_file = self.FILES[new_file_index]
+                    
+                    new_position = Position(new_file, new_rank)
+                elif direction1 == 'right': # Diagonally right is down and to the right
+                    # Move right diagonally (increase file and increase rank), wrap around if necessary
+                    new_rank_index = (rank_index - squares) % len(self.RANKS)
+                    new_file_index = (file_index + squares) % len(self.FILES)
+                    
+                    new_rank = self.RANKS[new_rank_index]
+                    new_file = self.FILES[new_file_index]
+                    
+                    new_position = Position(new_file, new_rank)
+                else:
+                    raise ValueError(f"Invalid direction: {direction1}")
+            else:
+                raise ValueError(f"Invalid direction: {direction2}")
+            
+        elif self.black_piece.name == 'queen':
+            if direction2 == 'straight':
+                if direction1 == 'up':
+                    # Move up (increase rank), wrap around if necessary
+                    new_rank_index = (rank_index + squares) % len(self.RANKS)
+                    new_rank = self.RANKS[new_rank_index]
+
+                    new_position = Position(current_file, new_rank)
+                elif direction1 == 'right':
+                    # Move right (increase file), wrap around if necessary
+                    new_file_index = (file_index + squares) % len(self.FILES)
+                    new_file = self.FILES[new_file_index]
+
+                    new_position = Position(new_file, current_rank)
+                else:
+                    raise ValueError(f"Invalid direction: {direction1}")
+            elif direction2 == 'diagonal':
+                # Move right diagonally, wrap around if necessary
+                if direction1 == 'up': # Diagonally up is up and to the right
+                    # Move up diagonally (increase rank and decrease file), wrap around if necessary
+                    new_rank_index = (rank_index + squares) % len(self.RANKS)
+                    new_file_index = (file_index + squares) % len(self.FILES)
+                    
+                    new_rank = self.RANKS[new_rank_index]
+                    new_file = self.FILES[new_file_index]
+                    
+                    new_position = Position(new_file, new_rank)
+                elif direction1 == 'right': # Diagonally right is down and to the right
+                    # Move right diagonally (increase file and increase rank), wrap around if necessary
+                    new_rank_index = (rank_index - squares) % len(self.RANKS)
+                    new_file_index = (file_index + squares) % len(self.FILES)
+                    
+                    new_rank = self.RANKS[new_rank_index]
+                    new_file = self.FILES[new_file_index]
+                    
+                    new_position = Position(new_file, new_rank)
+                else:
+                    raise ValueError(f"Invalid direction: {direction1}")
+            else:
+                raise ValueError(f"Invalid direction: {direction2}")
+
+        elif self.black_piece.name == 'knight':
+            squares = 1 if squares >= 3 else 0 # Knight has to move as long as dice is >= 3
+            if direction2 == 'straight':
+                if direction1 == 'up':
+                    # Move up and to the left (increase rank decrease file), wrap around if necessary
+                    new_rank_index = (rank_index + squares * 2) % len(self.RANKS)
+                    new_file_index = (file_index - squares * 1) % len(self.FILES)
+
+                    new_rank = self.RANKS[new_rank_index]
+                    new_file = self.FILES[new_file_index]
+
+                    new_position = Position(new_file, new_rank)
+                elif direction1 == 'right':
+                    # Move right and up (increase rank increase file), wrap around if necessary
+                    new_rank_index = (rank_index + squares * 2) % len(self.RANKS)
+                    new_file_index = (file_index + squares * 1) % len(self.FILES)
+
+                    new_rank = self.RANKS[new_rank_index]
+                    new_file = self.FILES[new_file_index]
+
+                    new_position = Position(new_file, new_rank)
+                else:
+                    raise ValueError(f"Invalid direction: {direction1}")
+            elif direction2 == 'diagonal':
+                # Move right diagonally (increase file and increase rank), wrap around if necessary
+                if direction1 == 'up': # Diagonally up is up and to the right
+                    # Move up diagonally (increase rank and increase file), wrap around if necessary
+                    new_rank_index = (rank_index + squares * 1) % len(self.RANKS)
+                    new_file_index = (file_index + squares * 2) % len(self.FILES)
+
+                    new_rank = self.RANKS[new_rank_index]
+                    new_file = self.FILES[new_file_index]
+                    
+                    new_position = Position(new_file, new_rank)
+                elif direction1 == 'right': # Diagonally right is down and to the right
+                    # Move right diagonally (increase file and increase rank), wrap around if necessary
+                    new_rank_index = (rank_index - squares * 2) % len(self.RANKS)
+                    new_file_index = (file_index + squares * 1) % len(self.FILES)
+
+                    new_rank = self.RANKS[new_rank_index]
+                    new_file = self.FILES[new_file_index]
+
+                    new_position = Position(new_file, new_rank)
+                else:
+                    raise ValueError(f"Invalid direction: {direction1}")
+        
+        elif self.black_piece.name == 'pawn':
+            # Pawn can only move in one direction for one space
+            if squares >= 1:
+                new_rank_index = (rank_index - 1) % len(self.RANKS)
+
+                new_rank = self.RANKS[new_rank_index]
+
+                new_position = Position(current_file, new_rank)
+            else:
+                new_position = Position(current_file, current_rank)
+
+        self.black_piece.move_to(new_position)
         return new_position
 
     def display_board(self):
@@ -101,10 +298,10 @@ class Board:
                     else:
                         left_bracket, right_bracket = "\033[90m" + "[" + "\033[0m", "\033[90m" + "]" + "\033[0m"
 
-                if self.bishop.position.rank == rank and self.bishop.position.file == file:
-                    piece_on_square = "\033[97m" + "B" + "\033[0m"
-                elif self.rook.position.rank == rank and self.rook.position.file == file:
-                    piece_on_square = "\033[90m" + "R" + "\033[0m"
+                if self.white_piece.position.rank == rank and self.white_piece.position.file == file:
+                    piece_on_square = "\033[97m" + self.white_piece.name[0].upper() + "\033[0m"
+                elif self.black_piece.position.rank == rank and self.black_piece.position.file == file:
+                    piece_on_square = "\033[90m" + self.black_piece.name[0].upper() + "\033[0m"
 
                 if piece_on_square:
                     self.board_str += f"[{piece_on_square}]"
