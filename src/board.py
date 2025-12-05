@@ -89,9 +89,9 @@ class Board:
             for file in self.FILES:
                 piece_on_square = None # Sanity check
                 if self.bishop.position.rank == rank and self.bishop.position.file == file:
-                    piece_on_square = "B"
+                    piece_on_square = "\033[97m" + "B" + "\033[0m"
                 elif self.rook.position.rank == rank and self.rook.position.file == file:
-                    piece_on_square = "R"
+                    piece_on_square = "\033[90m" + "R" + "\033[0m"
                 
                 if piece_on_square:
                     self.board_str += f"[{piece_on_square}]"
