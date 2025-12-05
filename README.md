@@ -16,3 +16,5 @@ An object-oriented approach was taken to designing the pieces, board, game, then
 Noted from the diagram that the Rook is black and the Bishop is white
 
 Created a custom UI to represent the pieces on the board, displaying the Rook and Bishop with color as well as the board
+
+Utilized custom classes to print color

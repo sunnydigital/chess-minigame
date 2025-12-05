@@ -52,7 +52,7 @@ def main():
     )
     parser.add_argument(
         '--seed',
-        default='123',
+        default='',
         help='Seed fo game to be generated'
     )
     args = parser.parse_args()

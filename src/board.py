@@ -1,6 +1,5 @@
 from pieces import Position, Bishop, Rook
-
-
+from rich import print
 class Board:
     """Represents a chess board with rook and bishop."""
 
@@ -85,19 +84,34 @@ class Board:
         self.board_str = "   " + "  ".join(self.FILES) + "\n"
 
         for rank in self.RANKS[::-1]: # Ranks are reversed top to bottom: 8 -> 1
+            rank_even = True if rank % 2 else False
             self.board_str += f"{rank} "
-            for file in self.FILES:
-                piece_on_square = None # Sanity check
+            for j, file in enumerate(self.FILES, 1):
+                file_even = True if j % 2 else False
+                piece_on_square = None
+                # Checks for square bracket color and uses ANSI for color output
+                if rank_even:
+                    if file_even:
+                        left_bracket, right_bracket = "\033[90m" + "[" + "\033[0m", "\033[90m" + "]" + "\033[0m"
+                    else:
+                        left_bracket, right_bracket = "\033[97m" + "[" + "\033[0m", "\033[97m" + "]" + "\033[0m"
+                else:
+                    if file_even:
+                        left_bracket, right_bracket = "\033[97m" + "[" + "\033[0m", "\033[97m" + "]" + "\033[0m"
+                    else:
+                        left_bracket, right_bracket = "\033[90m" + "[" + "\033[0m", "\033[90m" + "]" + "\033[0m"
+
                 if self.bishop.position.rank == rank and self.bishop.position.file == file:
                     piece_on_square = "\033[97m" + "B" + "\033[0m"
                 elif self.rook.position.rank == rank and self.rook.position.file == file:
                     piece_on_square = "\033[90m" + "R" + "\033[0m"
-                
+
                 if piece_on_square:
                     self.board_str += f"[{piece_on_square}]"
                 else:
-                    self.board_str += "[ ]"
-            self.board_str += "\n"
+                    self.board_str += left_bracket + " " + right_bracket
+            if rank != 1:
+                self.board_str += "\n"
 
         return self.board_str
 
