@@ -24,6 +24,17 @@ def main():
     )
 
     parser.add_argument(
+        '--bishop',
+        default='c3',
+        help='Bishop starting position (default: c3)'
+    )
+    parser.add_argument(
+        '--rook',
+        default='h1',
+        help='Rook starting position (default: h1)'
+    )
+    '''   
+    parser.add_argument(
         '--white',
         default='bishop c3',
         help='Bishop starting piece and position (default: c3)'
@@ -33,6 +44,7 @@ def main():
         default='rook h1',
         help='Rook starting piece and position (default: h1)'
     )
+    '''   
     parser.add_argument(
         '--rounds',
         default='15',
