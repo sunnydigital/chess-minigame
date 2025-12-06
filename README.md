@@ -38,6 +38,26 @@ rook-vs-bishop/
 └── README.md
 ```
 
+### File Usage and Implementation
+
+<img src="assets/class_diagram.png" alt="The layout/implementation diagram for the repository">
+
+<a href="https://www.flaticon.com/free-icons/board-game" title="board game icons">Board game icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/pawn" title="pawn icons">Pawn icons created by rizal2109 - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/rook" title="rook icons">Rook icons created by rizal2109 - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/chess-piece" title="chess piece icons">Chess piece icons created by rizal2109 - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/board-game" title="board-game icons">Board-game icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/coin" title="coin icons">Coin icons created by Freepik - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/cycle" title="cycle icons">Cycle icons created by Uniconlabs - Flaticon</a>
+
+<a href="https://www.flaticon.com/free-icons/terminal" title="terminal icons">Terminal icons created by icon_small - Flaticon</a>
+
 ## Usage
 
 ### Basic Usage (Default: Bishop at c3, Rook at h1)
@@ -122,6 +142,10 @@ Expanded the game beyond the original Rook vs. Bishop specification:
 3. **Flexible Piece Selection**: Any piece can be assigned to white or black via command line arguments
 
 4. **Configurable Game Parameters**: Custom starting positions, adjustable round count, reproducible games via seed
+
+The versioning can be represented by the following diagram:
+
+<img src="assets/venn_diagram.png" alt="Venn diagram explaining the relationship between the original Rook vs. Bishop program and the updated Chess Minigame program">
 
 ## Architecture
 
