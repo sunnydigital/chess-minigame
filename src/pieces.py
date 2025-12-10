@@ -121,7 +121,7 @@ class King(Piece):
         file_diff = abs(ord(self.position.file) - ord(target_position.file))
         rank_diff = abs(self.position.rank - target_position.rank)
         
-        one_diff = True if file_diff == 1 or rank_diff == 1 else False
+        one_diff = True if file_diff == 1 and rank_diff == 1 else False
 
         same_file = self.position.file == target_position.file 
         same_rank = self.position.rank == target_position.rank

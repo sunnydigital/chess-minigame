@@ -71,7 +71,7 @@ class ChessMiniGame:
 
         if self.board.black_piece.name in lin_combo_pieces:
             direction2 = 'straight' if coin2 == 'heads' else 'diagonal' # Uses a combination of two movement sets limited to the top right quadrant to decide movements for Queen, King, Knight
-            print(f"Coin toss 1: {coin1.upper()} Coin toss 2: {coin2.upper()} -> Moving {direction1} and to the {direction2}")
+            print(f"Coin toss 1: {coin1.upper()} Coin toss 2: {coin2.upper()} -> Moving {direction2} and to the {direction1}")
         else:
             print(f"Coin toss: {coin1.upper()} -> Moving {direction1}")
 
