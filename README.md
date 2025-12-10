@@ -1,23 +1,31 @@
 # Chess Minigame (Rook vs. Bishop Extension)
 
-A chess survival simulation where a rook tries to survive 15 rounds without being captured by a bishop.
+A chess survival simulation where a white piece (default = rook) tries to survive a set number (default = 15) rounds without being captured by a white piece (default = bishop).
 
 ## The Problem
 
-This is a "special" game of chess where each player only has one piece:
+The original problem is a "special" game of chess where each player only has one piece:
 - **White** has a Bishop (stationary at c3)
 - **Black** has a Rook (starts at h1, moving)
 
+### Chess Minigame Update
+
+The problem was generalized to:
+- Accept starting positions of both white and black
+- A random seed to ensure reproductibility
+- Selection of starting chess pieces (King, Queen, Knight, Pawn)
+
 ### Game Rules
 
-1. **Coin Toss**: Heads = rook moves up, Tails = rook moves right
-2. **Dice Roll**: Sum of two 6-sided dice determines the number of squares to move
-3. **Board Wrapping**:
-   - If the rook reaches the rightmost column, it emerges from the leftmost column
-   - If the rook reaches the topmost row, it emerges from the bottommost row
-4. **Win Condition**:
-   - Rook survives 15 rounds = Black wins
-   - Bishop can capture the rook = White wins
+1. **Coin Toss**: Heads = black moves up, Tails = black moves right, a second coin dictates Heads = straight and Tails = diagonal movement
+3. **Dice Roll**: Sum of two 6-sided dice determines the number of squares to move
+4. **Board Wrapping**:
+   - If the piece reaches the rightmost column, it emerges from the leftmost column
+   - If the piece reaches the topmost row, it emerges from the bottommost row
+   - If the piece reaches the bottommost row, it emerges from the topmost row
+5. **Win Condition**:
+   - Black survives 15 rounds = Black wins
+   - White can capture the rook = White wins
 
 ### Chess Notation
 
