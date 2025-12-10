@@ -13,7 +13,7 @@ The original problem is a "special" game of chess where each player only has one
 The problem was generalized to:
 - Accept starting positions of both white and black
 - A random seed to ensure reproductibility
-- Selection of starting chess pieces (King, Queen, Knight, Pawn)
+- Selection of starting chess pieces (Rook, Bishop, King, Queen, Knight, Pawn)
 
 ### Game Rules
 
