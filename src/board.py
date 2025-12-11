@@ -298,9 +298,15 @@ class Board:
                         left_bracket, right_bracket = "\033[90m" + "[" + "\033[0m", "\033[90m" + "]" + "\033[0m"
 
                 if self.white_piece.position.rank == rank and self.white_piece.position.file == file:
-                    piece_on_square = "\033[97m" + self.white_piece.name[0].upper() + "\033[0m"
+                    if self.white_piece.name == 'king':
+                        piece_on_square = "\033[97m" + 'Ḵ' + "\033[0m"
+                    else:
+                        piece_on_square = "\033[97m" + self.white_piece.name[0].upper() + "\033[0m"
                 elif self.black_piece.position.rank == rank and self.black_piece.position.file == file:
-                    piece_on_square = "\033[90m" + self.black_piece.name[0].upper() + "\033[0m"
+                    if self.black_piece.name == 'king':
+                        piece_on_square = "\033[90m" + 'Ḵ' + "\033[0m"
+                    else:
+                        piece_on_square = "\033[90m" + self.black_piece.name[0].upper() + "\033[0m"
 
                 if piece_on_square:
                     self.board_str += f"{left_bracket}{piece_on_square}{right_bracket}"
