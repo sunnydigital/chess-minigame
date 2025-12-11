@@ -167,7 +167,7 @@ class Knight(Piece):
     def can_capture(self, target_position):
         """
         Check if the knight can capture a piece at the target position.
-        Knight moves horizontally, vertically, or diagonally.
+        Knight moves 2 spaces in a direction then 1 space perpendicular.
 
         Args:
             target_position (Position): Position to check
@@ -182,7 +182,7 @@ class Knight(Piece):
         return ((file_diff == 2 and rank_diff == 1) or (file_diff == 1 and rank_diff == 2)) and self.position != target_position
 
 class Pawn(Piece):
-    """Pawn chess piece - moves horizontally, vertically, or diagonally"""
+    """Pawn chess piece - moves 1 square forward"""
 
     def __init__(self, position, color):
         """Initializa a pawn"""
@@ -192,7 +192,7 @@ class Pawn(Piece):
     def can_capture(self, target_position):
         """
         Check if the pawn can capture a piece at the target position.
-        Pawn moves horizontally, vertically, or diagonally.
+        Pawn moves 1 square forward.
 
         Args:
             target_position (Position): Position to check

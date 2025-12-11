@@ -46,7 +46,6 @@ class Board:
         elif black_piece == 'pawn':
             self.black_piece = Pawn(black_position, 'black')
 
-
     def is_black_captured(self):
         """
         Check if the white piece can capture the black piece.
@@ -304,7 +303,7 @@ class Board:
                     piece_on_square = "\033[90m" + self.black_piece.name[0].upper() + "\033[0m"
 
                 if piece_on_square:
-                    self.board_str += f"[{piece_on_square}]"
+                    self.board_str += f"{left_bracket}{piece_on_square}{right_bracket}"
                 else:
                     self.board_str += left_bracket + " " + right_bracket
             if rank != 1:

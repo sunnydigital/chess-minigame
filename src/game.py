@@ -87,12 +87,13 @@ class ChessMiniGame:
         # Step 4: Display the board
         print(self.board.display_board())
 
-        # Step 5: Check if rook was captured
+        # Step 5: Check if black was captured
         if self.board.is_black_captured():
             capture_msg = f"BLACK {self.board.black_piece.name.upper()} CAPTURED! White {self.board.white_piece.name.capitalize()} can capture the Black {self.board.black_piece.name.capitalize()} at this position!"
             print("\n" + "!" * len(capture_msg))
             print(capture_msg)
             print("!" * len(capture_msg))
+            self.board.white_piece.position = self.board.black_piece.position  # Update white piece position to captured position
             return True
 
         print(f"\nBlack {self.board.black_piece.name.capitalize()} is safe this round.")
@@ -122,6 +123,7 @@ class ChessMiniGame:
                 print(win_msg)
                 print("=" * len(win_msg))
                 print(f"The Black {self.board.black_piece.name.capitalize()} was captured in round {self.current_round}.")
+                print(self.board.display_board())
                 return 'white'
 
         win_msg = f"GAME OVER - BLACK {self.board.black_piece.name.upper()} WINS!"
@@ -129,4 +131,5 @@ class ChessMiniGame:
         print(win_msg)
         print("=" * len(win_msg))
         print(f"The Black {self.board.black_piece.name.capitalize()} survived all {self.rounds} rounds!")
+        print(self.board.display_board())
         return 'black'
